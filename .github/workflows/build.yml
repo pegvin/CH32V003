@@ -7,9 +7,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      TOOLCHAIN_VERSION: "14.2.0-3"
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+
+    - name: Cache Toolchain
+      id: cache-toolchain
+      uses: actions/cache@v4
+      with:
+        key: ${{ runner.os }}-toolchain-${{ env.TOOLCHAIN_VERSION }}
+        path: toolchain/
 
     - name: Install ShellCheck
       run: |
@@ -22,6 +31,7 @@ jobs:
         shellcheck --shell=sh --exclude=SC2086 --norc ./setup_toolchain.sh
 
     - name: Setup Toolchain
+      if: ${{ steps.cache-toolchain.outputs.cache-hit != 'true' }}
       run: ./setup_toolchain.sh
 
     - name: Build

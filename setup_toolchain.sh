@@ -6,7 +6,7 @@ set -eu
 
 if ! [ -x "$(command -v wget)" ]; then echo "# wget not found!"; exit 1; fi
 
-ver='14.2.0-3'
+ver=${TOOLCHAIN_VERSION:-'14.2.0-3'}
 tc="xpack-riscv-none-elf-gcc-$ver"
 tc_tar="$tc-linux-x64.tar.gz"
 tc_url="https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/download/v$ver/$tc_tar"
