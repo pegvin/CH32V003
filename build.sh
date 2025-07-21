@@ -15,8 +15,10 @@ SOURCES="src/main.c hal/startup_ch32v00x.S hal/debug.c hal/core_riscv.c hal/syst
 OBJECTS="$(echo "$SOURCES" | sed "s|\([^ ]*\)\.c|$BUILD/\1.c.o|g")"
 MAYBE_WAIT=""
 
-export PATH="$(realpath toolchain/main/bin):$PATH"
-export CCACHE_DIR="$BUILD/.ccache"
+PATH="$(realpath toolchain/main/bin):$PATH"
+CCACHE_DIR="$BUILD/.ccache"
+
+export PATH CCACHE_DIR
 mkdir -p $BUILD $CCACHE_DIR
 
 if [ "$(uname -s)" = "Windows_NT" ] || [ "$(uname -o)" = "Cygwin" ]; then
