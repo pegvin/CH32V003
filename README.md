@@ -1,17 +1,18 @@
 # CH32V003
-Minimal Standalone CH32V003 Build Environment (No CH32Fun)
+Minimal CLI Oriented CH32V003 Build Environment (No CH32Fun)
 
 ---
 
 ## About
 
-This repository is an cleaner extension of <https://github.com/maxgerhardt/ch32v003-vanilla-gcc>.
-It uses the original HAL code provided by WCH whilst using regular gcc toolchain (riscv-none-elf-gcc)
-which you can easily setup by running `setup_toolchain.sh` (It setups [riscv-none-elf-gcc-xpack](<https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack>)).
+This repository is a cleaner extended version of <https://github.com/maxgerhardt/ch32v003-vanilla-gcc>.
+It's meant to provide a minimal CLI oriented build environment for CH32V003.
+The repository uses the original HAL (Inside `hal/`) provided by WCH whilst
+using regular gcc toolchain which you can easily setup by running `setup_toolchain.sh`
+(Which setups [riscv-none-elf-gcc-xpack](<https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack>)).
 
-The aim is to provide a minimal environment that's CLI oriented. The
-repository contains a main `build.sh` script responsible for building/cleaning.
-It uses `ccache` (If available) to do incremental builds.
+The repository contains a `build.sh` script responsible for building/cleaning
+your code. It uses `ccache` (If available) to do incremental builds.
 
 The repository also has GitHub Actions setup inside `.github/workflows/build.yml`
 file. It sets up the toolchain (caches it to speedup further CI builds) & builds
