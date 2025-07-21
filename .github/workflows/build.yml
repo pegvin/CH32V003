@@ -1,0 +1,42 @@
+name: Build
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install ShellCheck
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install shellcheck -y
+
+    - name: Lint Shell Scripts
+      run: |
+        shellcheck --shell=sh --exclude=SC2086 --norc ./build.sh
+        shellcheck --shell=sh --exclude=SC2086 --norc ./setup_toolchain.sh
+
+    - name: Setup Toolchain
+      run: ./setup_toolchain.sh
+
+    - name: Build
+      run: |
+        ./build.sh
+        mv build build-debug
+        ./build.sh clean
+        ./build.sh release
+        mv build build-release
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build
+        if-no-files-found: error
+        path: |
+          ./build-debug
+          ./build-release

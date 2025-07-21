@@ -5,7 +5,6 @@ set -eu
 CC=${CC:-riscv-none-elf-gcc}
 LD=${LD:-riscv-none-elf-gcc}
 OBJC=${OBJCOPY:-riscv-none-elf-objcopy}
-OBJD=${OBJCOPY:-riscv-none-elf-objdump}
 CMD=${1:-}
 BUILD="build"
 BIN="$BUILD/firmware.bin"
@@ -33,13 +32,9 @@ elif [ "$CMD" = "bear" ]; then
 	bear --append --output "$BUILD/compile_commands.json" -- "$0" # github.com/rizsotto/Bear
 	exit 0
 elif [ "$CMD" = "release" ]; then
-	# TODO(pegvin) - Look into https://stackoverflow.com/q/6687630/14516016
-	# in detail & figure out a way to strip all the unused functions, Since
-	# we won't be used most of the ImGui's functions anyways.
 	CFLAGS="$CFLAGS -O3 -DBUILD_RELEASE=1"
 elif [ "$CMD" = "" ]; then
 	CFLAGS="$CFLAGS -O0 -g3 -DBUILD_DEBUG=1"
-	LFLAGS="$LFLAGS"
 elif [ "$CMD" ]; then
 	echo "Invalid command '$CMD', Available commands are: clean/bear/assets/release or none to just build in debug mode."
 	exit 1
