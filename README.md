@@ -13,6 +13,10 @@ The aim is to provide a minimal environment that's CLI oriented. The
 repository contains a main `build.sh` script responsible for building/cleaning.
 It uses `ccache` (If available) to do incremental builds.
 
+The repository also has GitHub Actions setup inside `.github/workflows/build.yml`
+file. It sets up the toolchain (caches it to speedup further CI builds) & builds
+in both debug & release mode. The build directories are then uploaded as artifacts.
+
 Other stuff that might be worth looking into:
 - <https://github.com/basilhussain/ch32v003-startup>
 
