@@ -42,11 +42,16 @@ jobs:
         ./build.sh release
         mv build build-release
 
-    - name: Upload Artifacts
+    - name: Upload Artifacts (Debug)
       uses: actions/upload-artifact@v4
       with:
-        name: build
+        name: build-debug
         if-no-files-found: error
-        path: |
-          ./build-debug
-          ./build-release
+        path: ./build-debug/firmware.bin
+
+    - name: Upload Artifacts (Release)
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-release
+        if-no-files-found: error
+        path: ./build-debug/firmware.bin
