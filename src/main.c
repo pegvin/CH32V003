@@ -5,6 +5,7 @@
 // It uses PD5 port for USART TX, Make sure to connect that
 // to your WCH-LinkE's RX pin.
 
+// I am not sure how printf would work on non-wch toolchains.
 #ifdef NO_WCH_TOOLCHAIN
 	#define printf(fmt, ...)
 #endif
