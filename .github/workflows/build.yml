@@ -28,6 +28,7 @@ jobs:
     - name: Lint Shell Scripts
       run: |
         shellcheck --shell=sh --exclude=SC2086 --norc ./build.sh
+        shellcheck --shell=sh --exclude=SC2086 --norc ./build-wch.sh
         shellcheck --shell=sh --exclude=SC2086 --norc ./setup_toolchain.sh
 
     - name: Setup Toolchain

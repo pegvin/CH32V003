@@ -2,7 +2,7 @@
 
 set -eu
 
-export TC=$(realpath ~/Documents/WCH/MRS_Toolchain/RISC-V\ Embedded\ GCC12/bin)
+export TC=${TC:-"$(realpath ~/.local/opt/MRS_Toolchain/RISC-V\ Embedded\ GCC12/bin)"}
 export CC="$TC/riscv-wch-elf-gcc"
 export LD="$TC/riscv-wch-elf-gcc"
 export OBJC="$TC/riscv-wch-elf-objcopy"
