@@ -5,10 +5,20 @@
 // It uses PD5 port for USART TX, Make sure to connect that
 // to your WCH-LinkE's RX pin.
 
+#ifdef NO_WCH_TOOLCHAIN
+	#define printf(fmt, ...)
+#endif
+
 int main(void) {
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 	SystemCoreClockUpdate();
 	Delay_Init();
+
+#if (SDI_PRINT == SDI_PR_OPEN)
+	SDI_Printf_Enable();
+#else
+	USART_Printf_Init(115200);
+#endif
 
 	GPIO_InitTypeDef GPIO_InitStructure = {0};
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
@@ -16,8 +26,6 @@ int main(void) {
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
-
-	USART_Printf_Init(115200);
 
 	// Let our host-system catch up
 	Delay_Ms(2500);

@@ -12,7 +12,7 @@ FLAGS="$FLAGS -mabi=ilp32e -msave-restore -nostartfiles -nodefaultlibs -nostdlib
 
 CFLAGS=${CFLAGS:-}
 CFLAGS="$CFLAGS -std=c99 -fasm -Wall -Wextra -pedantic -Isrc/ -Ihal/Core/ -Ihal/Debug -Ihal/Peripheral/inc -Ihal/User -fdata-sections -ffunction-sections"
-CFLAGS="$CFLAGS -DHSE_VALUE=((uint32_t)24000000) -DSDI_PRINT=SDI_PR_OPEN -DDEBUG=DEBUG_UART1_NoRemap -DINTSYSCR_INEST=INTSYSCR_INEST_EN"
+CFLAGS="$CFLAGS -DNO_WCH_TOOLCHAIN=1 -DHSE_VALUE=((uint32_t)24000000) -DSDI_PRINT=SDI_PR_OPEN -DDEBUG=DEBUG_UART1_NoRemap -DINTSYSCR_INEST=INTSYSCR_INEST_EN"
 
 LFLAGS=${LFLAGS:-}
 LFLAGS="$LFLAGS -T hal/Ld/Link.ld -Wl,--gc-sections -Wl,--print-memory-usage -lgcc"
@@ -34,7 +34,10 @@ elif [ "$CMD" = "bear" ]; then
 	bear --append --output "$BUILD/compile_commands.json" -- "$0" # github.com/rizsotto/Bear
 	exit 0
 elif [ "$CMD" = "flash" ]; then
-	wlink flash --enable-sdi-print --watch-serial --chip CH32V003 "$BIN"
+	wlink flash --enable-sdi-print --chip CH32V003 "$BIN"
+	exit 0
+elif [ "$CMD" = "serial" ]; then
+	cat /dev/ttyACM0
 	exit 0
 elif [ "$CMD" = "release" ]; then
 	CFLAGS="$CFLAGS -DBUILD_RELEASE=1"

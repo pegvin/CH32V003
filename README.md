@@ -32,6 +32,7 @@ in both debug & release mode. The built binaries are then uploaded as artifacts.
 
 Other stuff that might be worth looking into:
 - <https://github.com/basilhussain/ch32v003-startup>
+- <https://github.com/cjacker/opensource-toolchain-ch32v#debugging>
 
 ## License
 All the non-WCH code in this repository is under public domain license.
