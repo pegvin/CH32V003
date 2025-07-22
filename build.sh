@@ -7,10 +7,15 @@ CC=${CC:-riscv-none-elf-gcc}
 LD=${LD:-riscv-none-elf-gcc}
 OBJC=${OBJC:-riscv-none-elf-objcopy}
 
-FLAGS=${FLAGS:-'-march=rv32ec_zifencei_zicsr'}
+FLAGS=${FLAGS:-'-march=rv32ec_zifencei_zicsr -msmall-data-limit=8'}
 FLAGS="$FLAGS -mabi=ilp32e -msave-restore -nostartfiles -nodefaultlibs -nostdlib --specs=nano.specs --specs=nosys.specs"
-CFLAGS='-std=c99 -fasm -Wall -Wextra -pedantic -Isrc/ -Ihal/Core/ -Ihal/Debug -Ihal/Peripheral/inc -Ihal/User -fdata-sections -ffunction-sections -msmall-data-limit=8'
-LFLAGS='-T hal/Ld/Link.ld -Wl,--gc-sections -Wl,--print-memory-usage -Wl,-Bstatic -lgcc'
+
+CFLAGS=${CFLAGS:-}
+CFLAGS="$CFLAGS -std=c99 -fasm -Wall -Wextra -pedantic -Isrc/ -Ihal/Core/ -Ihal/Debug -Ihal/Peripheral/inc -Ihal/User -fdata-sections -ffunction-sections"
+CFLAGS="$CFLAGS -DSDI_PRINT=SDI_PR_OPEN -DDEBUG=DEBUG_UART1_NoRemap"
+
+LFLAGS=${LFLAGS:-}
+LFLAGS='-T hal/Ld/Link.ld -Wl,--gc-sections -Wl,--print-memory-usage -Wl,-Bstatic -lgcc -lprintf'
 
 CMD=${1:-}
 BUILD="build"
@@ -27,6 +32,9 @@ if [ "$CMD" = "clean" ]; then
 	exit 0
 elif [ "$CMD" = "bear" ]; then
 	bear --append --output "$BUILD/compile_commands.json" -- "$0" # github.com/rizsotto/Bear
+	exit 0
+elif [ "$CMD" = "flash" ]; then
+	wlink flash --enable-sdi-print --watch-serial --chip CH32V003 "$BIN"
 	exit 0
 elif [ "$CMD" = "release" ]; then
 	CFLAGS="$CFLAGS -DBUILD_RELEASE=1"
