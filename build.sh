@@ -15,7 +15,7 @@ CFLAGS="$CFLAGS -std=c99 -fasm -Wall -Wextra -pedantic -Isrc/ -Ihal/Core/ -Ihal/
 CFLAGS="$CFLAGS -DHSE_VALUE=((uint32_t)24000000) -DSDI_PRINT=SDI_PR_OPEN -DDEBUG=DEBUG_UART1_NoRemap -DINTSYSCR_INEST=INTSYSCR_INEST_EN"
 
 LFLAGS=${LFLAGS:-}
-LFLAGS='-T hal/Ld/Link.ld -Wl,--gc-sections -Wl,--print-memory-usage -Wl,-Bstatic -lgcc -lprintf'
+LFLAGS="$LFLAGS -T hal/Ld/Link.ld -Wl,--gc-sections -Wl,--print-memory-usage -lgcc"
 
 CMD=${1:-}
 BUILD="build"

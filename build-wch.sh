@@ -7,5 +7,6 @@ export CC=riscv-wch-elf-gcc
 export LD=riscv-wch-elf-gcc
 export OBJC=riscv-wch-elf-objcopy
 export FLAGS='-march=rv32ecxw -msmall-data-limit=0'
+export LFLAGS='-lprintf'
 
 ./build.sh "$@"
