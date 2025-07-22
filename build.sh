@@ -12,7 +12,7 @@ FLAGS="$FLAGS -mabi=ilp32e -msave-restore -nostartfiles -nodefaultlibs -nostdlib
 
 CFLAGS=${CFLAGS:-}
 CFLAGS="$CFLAGS -std=c99 -fasm -Wall -Wextra -pedantic -Isrc/ -Ihal/Core/ -Ihal/Debug -Ihal/Peripheral/inc -Ihal/User -fdata-sections -ffunction-sections"
-CFLAGS="$CFLAGS -DSDI_PRINT=SDI_PR_OPEN -DDEBUG=DEBUG_UART1_NoRemap"
+CFLAGS="$CFLAGS -DHSE_VALUE=((uint32_t)24000000) -DSDI_PRINT=SDI_PR_OPEN -DDEBUG=DEBUG_UART1_NoRemap -DINTSYSCR_INEST=INTSYSCR_INEST_EN"
 
 LFLAGS=${LFLAGS:-}
 LFLAGS='-T hal/Ld/Link.ld -Wl,--gc-sections -Wl,--print-memory-usage -Wl,-Bstatic -lgcc -lprintf'
