@@ -5,12 +5,8 @@
 #define BLINK_GPIO_PIN     GPIO_Pin_1
 #define BLINK_CLOCK_ENABLE RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE)
 
-// WCH-Interrupt-fast can be properly emulated in standard GCC but this is a minimal example
-void NMI_Handler(void); //__attribute__((interrupt("WCH-Interrupt-fast")));
-void HardFault_Handler(void); //__attribute__((interrupt("WCH-Interrupt-fast")));
-
 int main(void) {
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 	SystemCoreClockUpdate();
 	Delay_Init();
 
@@ -30,10 +26,4 @@ int main(void) {
 	}
 
 	return 0;
-}
-
-void NMI_Handler(void) {}
-void HardFault_Handler(void) {
-	while (1) {
-	}
 }
