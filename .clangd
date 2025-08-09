@@ -1,0 +1,5 @@
+# clangd for obvious reasons doesn't play well with
+# obscure architectures, abis, etc.
+# For more info, See: https://github.com/clangd/clangd/issues/1582
+CompileFlags:
+  Remove: [-march=*, -mabi=*, -mcpu=*]

@@ -1,0 +1,77 @@
+name: Build
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      TOOLCHAIN_VERSION: "14.2.0-3"
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Cache Toolchain
+      id: cache-toolchain
+      uses: actions/cache@v4
+      with:
+        key: ${{ runner.os }}-toolchain-${{ env.TOOLCHAIN_VERSION }}
+        path: toolchain/
+
+    - name: Cache MRS Toolchain
+      id: cache-mrs-toolchain
+      uses: actions/cache@v4
+      with:
+        key: ${{ runner.os }}-mrs-toolchain
+        path: mrs_toolchain/
+
+    - name: Install ShellCheck
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install shellcheck -y
+
+    - name: Lint Shell Scripts
+      run: |
+        shellcheck --shell=sh --exclude=SC2086 --norc ./build.sh
+        shellcheck --shell=sh --exclude=SC2086 --norc ./build-wch.sh
+        shellcheck --shell=sh --exclude=SC2086 --norc ./setup_toolchain.sh
+
+    - name: Setup Toolchain
+      if: ${{ steps.cache-toolchain.outputs.cache-hit != 'true' }}
+      run: ./setup_toolchain.sh
+
+    - name: Build
+      run: |
+        ./build.sh
+        mv build build-debug
+        ./build.sh release
+        mv build build-release
+
+    - name: Setup MRS Toolchain
+      if: ${{ steps.cache-mrs-toolchain.outputs.cache-hit != 'true' }}
+      run: |
+        mkdir mrs_toolchain/
+        cd mrs_toolchain/
+        wget -q --show-progress "https://github.com/pegvin/CH32V003/releases/download/mrs-v210/MRS_Toolchain_Linux_x64_V210.tar.xz" -O mrs_tc.tar.xz
+        tar -xf mrs_tc.tar.xz
+
+    - name: Build (MRS)
+      run: |
+        export TC=./mrs_toolchain/RISC-V\ Embedded\ GCC12/bin/
+        ./build-wch.sh
+        mv build build-mrs-debug
+        ./build-wch.sh release
+        mv build build-mrs-release
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build
+        if-no-files-found: error
+        path: |
+          ./build-debug/firmware.bin
+          ./build-release/firmware.bin
+          ./build-mrs-debug/firmware.bin
+          ./build-mrs-release/firmware.bin
