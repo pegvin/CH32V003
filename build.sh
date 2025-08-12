@@ -44,7 +44,7 @@ elif [ "$CMD" = "release" ]; then
 elif [ "$CMD" = "" ]; then
 	CFLAGS="$CFLAGS -DBUILD_DEBUG=1"
 elif [ "$CMD" ]; then
-	echo "Invalid command '$CMD', Available commands are: clean/bear/assets/release or none to just build in debug mode."
+	echo "Invalid command '$CMD', Available commands are: clean/bear/flash/serial/release or none to just build in debug mode."
 	exit 1
 fi
 
