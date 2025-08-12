@@ -42,13 +42,6 @@ jobs:
       if: ${{ steps.cache-toolchain.outputs.cache-hit != 'true' }}
       run: ./setup_toolchain.sh
 
-    - name: Build
-      run: |
-        ./build.sh
-        mv build build-debug
-        ./build.sh release
-        mv build build-release
-
     - name: Setup MRS Toolchain
       if: ${{ steps.cache-mrs-toolchain.outputs.cache-hit != 'true' }}
       run: |
@@ -57,13 +50,13 @@ jobs:
         wget -q --show-progress "https://github.com/pegvin/CH32V003/releases/download/mrs-v210/MRS_Toolchain_Linux_x64_V210.tar.xz" -O mrs_tc.tar.xz
         tar -xf mrs_tc.tar.xz
 
-    - name: Build (MRS)
+    - name: Build
       run: |
+        ./build.sh
+        mv build build-riscv-none-elf-gcc-xpack
         export TC=./mrs_toolchain/RISC-V\ Embedded\ GCC12/bin/
         ./build-wch.sh
-        mv build build-mrs-debug
-        ./build-wch.sh release
-        mv build build-mrs-release
+        mv build build-riscv-wch-elf-gcc-xpack
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
@@ -71,7 +64,5 @@ jobs:
         name: build
         if-no-files-found: error
         path: |
-          ./build-debug/firmware.bin
-          ./build-release/firmware.bin
-          ./build-mrs-debug/firmware.bin
-          ./build-mrs-release/firmware.bin
+          ./build-riscv-wch-elf-gcc-xpack/firmware.bin
+          ./build-riscv-none-elf-gcc-xpack/firmware.bin

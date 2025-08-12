@@ -37,8 +37,8 @@ Usage & Notes about `build.sh` (Applies to `build-wch.sh` as well):
 
 You can also look into `.github/workflows/build.yml` to modify & use
 GitHub Actions workflow for your own use. The default behavior sets up
-the toolchain (caches it to speedup future builds) & builds in both debug
-& release mode. The built binaries are then uploaded as artifacts.
+the toolchain (caches it to speedup future builds), builds & uploads
+the binaries as artifacts.
 
 Other stuff that might be worth looking into:
 - <https://github.com/basilhussain/ch32v003-startup>

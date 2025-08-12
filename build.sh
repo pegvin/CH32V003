@@ -11,7 +11,7 @@ FLAGS=${FLAGS:-'-march=rv32ec_zifencei_zicsr -msmall-data-limit=8'}
 FLAGS="$FLAGS -mabi=ilp32e -msave-restore -nostartfiles -nodefaultlibs -nostdlib --specs=nano.specs --specs=nosys.specs"
 
 CFLAGS=${CFLAGS:-}
-CFLAGS="$CFLAGS -std=c99 -fasm -Wall -Wextra -pedantic -Isrc/ -Ihal/Core/ -Ihal/Debug -Ihal/Peripheral/inc -Ihal/User -fdata-sections -ffunction-sections"
+CFLAGS="$CFLAGS -std=c99 -Os -fasm -Wall -Wextra -pedantic -Isrc/ -Ihal/Core/ -Ihal/Debug -Ihal/Peripheral/inc -Ihal/User -fdata-sections -ffunction-sections"
 CFLAGS="$CFLAGS -DNO_WCH_TOOLCHAIN=1 -DHSE_VALUE=((uint32_t)24000000) -DSDI_PRINT=SDI_PR_OPEN -DDEBUG=DEBUG_UART1_NoRemap -DINTSYSCR_INEST=INTSYSCR_INEST_EN"
 
 LFLAGS=${LFLAGS:-}
@@ -23,14 +23,11 @@ BIN="$BUILD/firmware.bin"
 SOURCES="src/main.c $(ls hal/*/*.S hal/*/*.c hal/*/*/*.c)"
 OBJECTS="$(echo "$SOURCES" | sed "s|\([^ ]*\)\.c|$BUILD/\1.c.o|g")"
 
-PATH="$TC:$PATH"
-export PATH CCACHE_DIR="$BUILD/.ccache"
-mkdir -p $BUILD $CCACHE_DIR
-
 if [ "$CMD" = "clean" ]; then
 	rm -rf $BIN $BUILD
 	exit 0
 elif [ "$CMD" = "bear" ]; then
+	mkdir -p "$BUILD"
 	bear --append --output "$BUILD/compile_commands.json" -- "$0" # github.com/rizsotto/Bear
 	exit 0
 elif [ "$CMD" = "flash" ]; then
@@ -39,16 +36,18 @@ elif [ "$CMD" = "flash" ]; then
 elif [ "$CMD" = "serial" ]; then
 	cat /dev/ttyACM0
 	exit 0
-elif [ "$CMD" = "release" ]; then
-	CFLAGS="$CFLAGS -DBUILD_RELEASE=1"
 elif [ "$CMD" = "" ]; then
-	CFLAGS="$CFLAGS -DBUILD_DEBUG=1"
+	:
 elif [ "$CMD" ]; then
-	echo "Invalid command '$CMD', Available commands are: clean/bear/flash/serial/release or none to just build in debug mode."
+	echo "Invalid command '$CMD', Available commands are: clean/bear/flash/serial or none to just build in debug mode."
 	exit 1
 fi
 
 if ! [ -x "$(command -v ccache)" ]; then CCACHE=""; else CCACHE="ccache"; fi
+
+PATH="$TC:$PATH"
+export PATH CCACHE_DIR="$BUILD/.ccache"
+mkdir -p "$BUILD" "$CCACHE_DIR"
 
 echo "$SOURCES 0" | tr ' ' '\n' | while read -r source; do
 	if [ "$source" = "0" ]; then wait; exit 0; fi
