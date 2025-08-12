@@ -7,12 +7,12 @@ CC=${CC:-riscv-none-elf-gcc}
 LD=${LD:-riscv-none-elf-gcc}
 OBJC=${OBJC:-riscv-none-elf-objcopy}
 
-FLAGS=${FLAGS:-'-march=rv32ec_zifencei_zicsr -msmall-data-limit=8'}
+FLAGS=${FLAGS:-'-DNO_WCH_TOOLCHAIN=1 -march=rv32ec_zifencei_zicsr -msmall-data-limit=8'}
 FLAGS="$FLAGS -mabi=ilp32e -msave-restore -nostartfiles -nodefaultlibs -nostdlib --specs=nano.specs --specs=nosys.specs"
 
 CFLAGS=${CFLAGS:-}
 CFLAGS="$CFLAGS -std=c99 -Os -fasm -Wall -Wextra -pedantic -Isrc/ -Ihal/Core/ -Ihal/Debug -Ihal/Peripheral/inc -Ihal/User -fdata-sections -ffunction-sections"
-CFLAGS="$CFLAGS -DNO_WCH_TOOLCHAIN=1 -DHSE_VALUE=((uint32_t)24000000) -DSDI_PRINT=SDI_PR_OPEN -DDEBUG=DEBUG_UART1_NoRemap -DINTSYSCR_INEST=INTSYSCR_INEST_EN"
+CFLAGS="$CFLAGS -DHSE_VALUE=((uint32_t)24000000) -DSDI_PRINT=SDI_PR_OPEN -DDEBUG=DEBUG_UART1_NoRemap -DINTSYSCR_INEST=INTSYSCR_INEST_EN"
 
 LFLAGS=${LFLAGS:-}
 LFLAGS="$LFLAGS -T hal/Ld/Link.ld -Wl,--gc-sections -Wl,--print-memory-usage -lgcc"
